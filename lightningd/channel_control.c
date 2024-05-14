@@ -1076,6 +1076,7 @@ static void peer_got_announcement(struct channel *channel, const u8 *msg)
 					     &remote_ann_bitcoin_sig);
 }
 
+//RANDY_COMMENTED
 static void peer_got_shutdown(struct channel *channel, const u8 *msg)
 {
 	u8 *scriptpubkey;
@@ -1316,6 +1317,8 @@ static void handle_local_anchors(struct channel *channel, const u8 *msg)
 	}
 }
 
+//RANDY_COMMENTED
+//CHECKPOINT
 static unsigned channel_msg(struct subd *sd, const u8 *msg, const int *fds)
 {
 	enum channeld_wire t = fromwire_peektype(msg);
@@ -1425,12 +1428,15 @@ static unsigned channel_msg(struct subd *sd, const u8 *msg, const int *fds)
 	return 0;
 }
 
+//RANDY_COMMENTED
 bool peer_start_channeld(struct channel *channel,
 			 struct peer_fd *peer_fd,
 			 const u8 *fwd_msg,
 			 bool reconnected,
 			 bool reestablish_only)
 {
+
+	//Init all variables
 	u8 *initmsg;
 	int hsmfd;
 	const struct existing_htlc **htlcs;
@@ -1445,6 +1451,8 @@ bool peer_start_channeld(struct channel *channel,
 	struct inflight **inflights;
 	struct bitcoin_txid txid;
 
+	//Get the client file descriptor using the channel peer's 'ld',
+	//'id', and 'dbid'
 	hsmfd = hsm_get_client_fd(ld, &channel->peer->id,
 				  channel->dbid,
 				  HSM_PERM_SIGN_GOSSIP
@@ -1456,6 +1464,10 @@ bool peer_start_channeld(struct channel *channel,
 				  | HSM_PERM_SIGN_SPLICE_TX
 				  | HSM_PERM_LOCK_OUTPOINT);
 
+	//Set the owner of the channel using the channel in argument
+	//and by starting a new channel subd with the channel argument 
+	//(and a lot of it's properties passed in separately)
+	//TODO: remove redundant 'channe' arguments'
 	channel_set_owner(channel,
 			  new_channel_subd(channel, ld,
 					   "lightning_channeld",
@@ -1469,25 +1481,38 @@ bool peer_start_channeld(struct channel *channel,
 					   take(&peer_fd->fd),
 					   take(&hsmfd), NULL));
 
+	//If there is no channel owner
 	if (!channel->owner) {
+		//Log that we couldn't open a subdaemon for channel
 		log_broken(channel->log, "Could not subdaemon channel: %s",
 			   strerror(errno));
+
+		//disconnect from the peer because we couldn't start channeld
 		force_peer_disconnect(ld, channel->peer,
 				      "Failed to create channeld");
+
+		//return false
 		return false;
 	}
 
+	//Set htlcs to the return val of peer_htlcs
 	htlcs = peer_htlcs(tmpctx, channel);
 
+	//If the channel's short channel id exists
 	if (channel->scid) {
+		//Extract it from the channel
 		scid = *channel->scid;
+		//Log that we already have funding
 		log_debug(channel->log, "Already have funding locked in");
 	} else {
+		//Otherwise set the channel id to 0s
 		memset(&scid, 0, sizeof(scid));
 	}
 
+	//Get the number of revocations from the channel 
 	num_revocations = revocations_received(&channel->their_shachain.chain);
 
+	//L
 	/* BOLT #2:
 	 *     - if `next_revocation_number` equals 0:
 	 *       - MUST set `your_last_per_commitment_secret` to all zeroes
@@ -1495,27 +1520,47 @@ bool peer_start_channeld(struct channel *channel,
 	 *       - MUST set `your_last_per_commitment_secret` to the last
 	 *         `per_commitment_secret` it received
 	 */
+	//L_END
+
+	//If the number of revocations is 0 (and we have no commitment updates)
 	if (num_revocations == 0)
+		//Clear out the mem for last secret 
+		//(set the last remote per commit secret to 0s)
 		memset(&last_remote_per_commit_secret, 0,
 		       sizeof(last_remote_per_commit_secret));
+			
+	//If we're not able to get the secret even when we have non-zero revocations
 	else if (!shachain_get_secret(&channel->their_shachain.chain,
 				      num_revocations-1,
 				      &last_remote_per_commit_secret)) {
+		//Fail the channel and say we couldn't get the revocation secret
 		channel_fail_permanent(channel,
 				       REASON_LOCAL,
 				       "Could not get revocation secret %"PRIu64,
 				       num_revocations-1);
+
+		//return false
 		return false;
 	}
 
+	//L
 	/* Warn once. */
+	//L_END
+
+	//If the channel is set to ignore fee limits or the daemon
+	//is condigured to ignore fee limits
 	if (channel->ignore_fee_limits || ld->config.ignore_fee_limits)
+		//Log that we're ignoring fee limits
 		log_unusual(channel->log, "Ignoring fee limits!");
 
+	//get pending penalties (?)
 	pbases = wallet_penalty_base_load_for_channel(
 	    tmpctx, channel->peer->ld->wallet, channel->dbid);
 
+	//Declare structs for keys
 	struct ext_key final_ext_key;
+
+	//CHECKPOINT
 	if (bip32_key_from_parent(
 		    ld->bip32_base,
 		    channel->final_key_idx,

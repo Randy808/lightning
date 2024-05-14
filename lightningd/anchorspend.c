@@ -257,29 +257,58 @@ static struct wally_psbt *anchor_psbt(const tal_t *ctx,
 	return psbt;
 }
 
+//C
 /* If it's possible and worth it, return signed tx.  Otherwise NULL. */
+//C_END
+
+//RANDY_COMMENTED
 static struct bitcoin_tx *spend_anchor(const tal_t *ctx,
 				       struct channel *channel,
 				       struct one_anchor *anch)
 {
+
+	//Set the lightningd struct to the 'ld' we find on the 'channel' argument's 'peer' field
 	struct lightningd *ld = channel->peer->ld;
+	
+	//Declare dpointer utxos;
 	struct utxo **utxos COMPILER_WANTS_INIT("gcc -O3 CI");
+
+	//Declare 2 sizes -- base weight and weight
 	size_t base_weight, weight;
+
+	//Declare 2 amount_sat structs for 'fee' and 'diff'
 	struct amount_sat fee, diff;
+
+	//Declare a bitcoin tx
 	struct bitcoin_tx *tx;
+
+	//Declare a wally psbt
 	struct wally_psbt *psbt;
+
+	//Declare an amount_msat with the total value
 	struct amount_msat total_value;
+
+	//Declare a byte ptr called msg
 	const u8 *msg;
 
+	//C
 	/* Estimate weight of spend tx plus commitment_tx (not including any UTXO we add) */
+	//C_END
+
+	//Find base weight by using helper functions
 	base_weight = bitcoin_tx_core_weight(2, 1)
 		+ bitcoin_tx_input_weight(false,
+						//Get ECDSA signature weight (including push opcode)
 					  bitcoin_tx_input_sig_weight()
+						//Get byte count (counts towards vsize) of script (prefix with +1 for push)
 					  + 1 + tal_bytelen(anch->adet->anchor_wscript))
 		+ bitcoin_tx_output_weight(BITCOIN_SCRIPTPUBKEY_P2WPKH_LEN)
 		+ anch->info.commitment_weight;
 
+	//Create a total value of 0
 	total_value = AMOUNT_MSAT(0);
+	
+	//CHECKPOINT
 	psbt = NULL;
 	for (int i = tal_count(anch->adet->vals) - 1; i >= 0; --i) {
 		const struct deadline_value *val = &anch->adet->vals[i];
@@ -451,6 +480,8 @@ static void create_and_broadcast_anchor(struct channel *channel,
 		     refresh_anchor_spend, anch);
 }
 
+//RANDY_COMMENTED
+//CHECKPOINT
 void commit_tx_boost(struct channel *channel,
 		     struct anchor_details *adet,
 		     bool success)

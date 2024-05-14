@@ -1265,6 +1265,8 @@ static struct command_result *json_invoice(struct command *cmd,
 	if (fallback_scripts)
 		info->b11->fallbacks = tal_steal(info->b11, fallback_scripts);
 
+	//RANDY_COMMENTED
+	//CHECKPOINT
 	/* We can't generate routehints without listincoming. */
 	plugin = find_plugin_for_command(cmd->ld, "listincoming");
 	if (!plugin) {

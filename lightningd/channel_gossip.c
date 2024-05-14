@@ -848,17 +848,31 @@ static void channel_reestablished_stable(struct channel *channel)
 	wallet_channel_save(channel->peer->ld->wallet, channel);
 }
 
+//RANDY_COMMENTED
+//CHECKPOINT
+
+//G
 /* Peer has connected and successfully reestablished channel. */
+//G_END
 void channel_gossip_channel_reestablished(struct channel *channel)
 {
+
+	//Set restablished on channel struct to true
 	channel->reestablished = true;
+
+	//free the channel's stable connection timer
 	tal_free(channel->stable_conn_timer);
+
+	//Create a new stable connection timer
 	channel->stable_conn_timer = new_reltimer(channel->peer->ld->timers,
 						  channel, time_from_sec(60),
 						  channel_reestablished_stable,
 						  channel);
 
+	//Log tha that the channel gossip was reestablished
 	log_debug(channel->log, "channel_gossip: reestablished");
+
+	//CHECKPOINT
 
 	/* Ignore unsaved channels */
 	if (!channel->channel_gossip)

@@ -754,6 +754,8 @@ static const struct plugin_command commands[] = {
 		"Show node {id} (or all known nods, if not specified)",
 		json_listnodes,
 	},
+	//RANDY_COMMENTED
+	//CHECKPOINT
 	{
 		"listincoming",
 		"network",

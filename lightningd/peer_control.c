@@ -275,6 +275,8 @@ bool invalid_last_tx(const struct bitcoin_tx *tx)
 #endif
 }
 
+//RANDY_COMMENTED
+//CHECKPOINT
 static bool commit_tx_send_finished(struct channel *channel,
 				    const struct bitcoin_tx *tx,
 				    bool success,
