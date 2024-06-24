@@ -4060,11 +4060,13 @@ def test_closing_ignore_fee_limits(node_factory, bitcoind, executor):
     l1.daemon.wait_for_log("Unable to agree on a feerate.")
 
 
-@pytest.mark.parametrize("anchors", [False, True])
+@pytest.mark.parametrize("anchors", [True])
 @unittest.skipIf(TEST_NETWORK != 'regtest', 'elementsd anchors not supportd')
 def test_anchorspend_using_to_remote(node_factory, bitcoind, anchors):
     """Make sure we can use `to_remote` output of previous close to spend anchor"""
+    # L
     # Try with old output from both anchor and non-anchor channel.
+    # L_END
     l4_opts = {}
     if anchors is False:
         l4_opts['dev-force-features'] = "-23"

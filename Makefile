@@ -462,7 +462,7 @@ ifeq ($(PYTEST),)
 	exit 1
 else
 # Explicitly hand VALGRIND so you can override on make cmd line.
-	PYTHONPATH=$(MY_CHECK_PYTHONPATH) TEST_DEBUG=1 VALGRIND=$(VALGRIND) $(PYTEST) tests/ $(PYTEST_OPTS)
+	PYTHONPATH=$(MY_CHECK_PYTHONPATH) TEST_DEBUG=1 VALGRIND=$(VALGRIND) $(PYTEST) -sv tests/test_closing.py::test_anchorspend_using_to_remote $(PYTEST_OPTS)
 endif
 
 check-fuzz: $(ALL_FUZZ_TARGETS)

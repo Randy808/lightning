@@ -1,0 +1,45 @@
+DEBUG:root:Calling check with payload ['stop']
+DEBUG:root:Did not find ' WARNING:' in logs
+DEBUG:root:Did not find ' WARNING:' in logs
+DEBUG:root:Did not find ' WARNING:' in logs
+DEBUG:root:Did not find ' WARNING:' in logs
+DEBUG:root:Did not find 'Peer has reconnected' in logs
+DEBUG:root:Did not find 'Peer has reconnected' in logs
+DEBUG:root:Did not find 'Peer has reconnected' in logs
+DEBUG:root:Did not find 'Peer has reconnected' in logs
+DEBUG:root:Did not find 'Bad gossip order:' in logs
+DEBUG:root:Did not find 'gossipd.*Bad (?!gossip order from error)' in logs
+DEBUG:root:Did not find 'Bad gossip order:' in logs
+DEBUG:root:Did not find 'gossipd.*Bad (?!gossip order from error)' in logs
+DEBUG:root:Did not find 'Bad gossip order:' in logs
+DEBUG:root:Did not find 'gossipd.*Bad (?!gossip order from error)' in logs
+DEBUG:root:Did not find 'Bad gossip order:' in logs
+DEBUG:root:Did not find 'gossipd.*Bad (?!gossip order from error)' in logs
+DEBUG:root:Did not find 'Bad reestablish' in logs
+DEBUG:root:Did not find 'Bad reestablish' in logs
+DEBUG:root:Did not find 'Bad reestablish' in logs
+DEBUG:root:Did not find 'Bad reestablish' in logs
+DEBUG:root:Did not find 'bad hsm request' in logs
+DEBUG:root:Did not find 'bad hsm request' in logs
+DEBUG:root:Did not find 'bad hsm request' in logs
+DEBUG:root:Did not find 'bad hsm request' in logs
+DEBUG:root:Did not find 'Accessing a null column' in logs
+DEBUG:root:Did not find 'Accessing a null column' in logs
+DEBUG:root:Did not find 'Accessing a null column' in logs
+DEBUG:root:Did not find 'Accessing a null column' in logs
+DEBUG:root:Did not find 'MEMLEAK:' in logs
+DEBUG:root:Did not find 'MEMLEAK:' in logs
+DEBUG:root:Did not find 'MEMLEAK:' in logs
+DEBUG:root:Did not find 'MEMLEAK:' in logs
+DEBUG:root:BitcoinRpcProxy shut down after processing 72 requests
+DEBUG:root:BitcoinRpcProxy shut down after processing 28 requests
+DEBUG:root:BitcoinRpcProxy shut down after processing 276 requests
+DEBUG:root:BitcoinRpcProxy shut down after processing 73 requests
+DEBUG:root:Calling stop with arguments ()
+DEBUG:root:Result for stop call: Bitcoin Core stopping
+DEBUG:root:Test execution failed, leaving the test directory /tmp/ltests-agbgxzis/test_anchorspend_using_to_remote_1 intact.
+Leaving base_dir /tmp/ltests-agbgxzis intact, it still has test sub-directories with failure details: ['test_anchorspend_using_to_remote_1']
+==================================== short test summary info =====================================
+FAILED tests/test_closing.py::test_anchorspend_using_to_remote[True] - TimeoutError: Unable to find "[re.compile('hsmd: Unilateral close output, deriving secrets')]...
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+================================== 1 failed in 96.38s (0:01:36) ==================================
